@@ -3,9 +3,12 @@ package de.krien.machinelearning.letterrecognition.view;
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -21,6 +24,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.Objdetect;
 import org.opencv.utils.Converters;
+
+import com.sun.javafx.geom.Vec2f;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -81,7 +86,7 @@ public class GuiController implements Initializable {
 	protected void erode() {
 		Mat mat = getMatFromImage();
 		Mat newMat = new Mat();
-		Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
+		Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2, 2));
 		Imgproc.erode(mat, newMat, element);
 		Image newImage = getImageFromMat(newMat);
 		image = newImage;
@@ -92,7 +97,7 @@ public class GuiController implements Initializable {
 	protected void dilate() {
 		Mat mat = getMatFromImage();
 		Mat newMat = new Mat();
-		Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(2, 2));
+		Mat element = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
 		Imgproc.dilate(mat, newMat, element);
 		Image newImage = getImageFromMat(newMat);
 		image = newImage;
@@ -113,7 +118,33 @@ public class GuiController implements Initializable {
 				Rect rect = Imgproc.boundingRect(contour);
 				rectangles.add(rect);
 		}
+		
+		ArrayList<Entry<Rect, Rect>> pairs = new ArrayList<>();
+		for(int i = 0; i < rectangles.size(); i++) {
+			for(int j = 0; j < rectangles.size(); j++) {
+				if(i != j) {
+					Vec2f pos1 = new Vec2f(rectangles.get(i).x, rectangles.get(i).y);
+					Vec2f pos2 = new Vec2f(rectangles.get(j).x, rectangles.get(j).y);
+					if (pos1.distance(pos2) < 30) {
+						pairs.add(new AbstractMap.SimpleEntry<Rect, Rect>(rectangles.get(i), rectangles.get(j)));
+					}
+				}
+			}
+		}
 
+		for(Entry<Rect, Rect> entry : pairs) {
+			Rect rectangle1 = entry.getKey();
+			Rect rectangle2 = entry.getValue();
+			int left = rectangle1.x < rectangle2.x ? rectangle2.x : rectangle1.x;
+			int top = rectangle1.y < rectangle2.y ? rectangle2.y : rectangle1.y;
+			int right = (rectangle1.x + rectangle1.width) < (rectangle2.x + rectangle2.width) ? (rectangle2.x + rectangle2.width) : (rectangle1.x + rectangle1.width);
+			int bottom = (rectangle1.y + rectangle1.height) < (rectangle2.y + rectangle2.height) ? (rectangle2.y + rectangle2.height) : (rectangle1.y + rectangle1.height);
+			rectangles.remove(rectangle1);
+			rectangles.remove(rectangle2);
+			Rect newRect = new Rect(left, top, (right - left), (bottom-top));
+			rectangles.add(newRect);
+		}
+		
 		for (Rect rect : rectangles) {
 			Imgproc.rectangle(newMat, rect.tl(), rect.br(), new Scalar(0, 0, 255));
 		}
@@ -122,6 +153,7 @@ public class GuiController implements Initializable {
 		image = newImage;
 		imageView.setImage(newImage);
 	}
+	
 
 	@FXML
 	protected void all() {
@@ -129,7 +161,7 @@ public class GuiController implements Initializable {
 		treshold();
 		invert();
 		erode();
-		dilate();
+//		dilate();
 		outlines();
 	}
 

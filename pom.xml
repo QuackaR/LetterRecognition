@@ -67,6 +67,5 @@
 			<version>3.0.0</version>
 			<classifier>natives-windows-x86_64</classifier>
 		</dependency>
-
 	</dependencies>
 </project>
