@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<SplitPane dividerPositions="0.29797979797979796" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.51" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.krien.machinelearning.letterrecognition.view.GuiController">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <Button layoutX="15.0" layoutY="15.0" mnemonicParsing="false" onAction="#blur" prefHeight="35.0" prefWidth="144.0" text="Blur" />
+            <Button layoutX="15.0" layoutY="65.0" mnemonicParsing="false" onAction="#treshold" prefHeight="35.0" prefWidth="144.0" text="Threshold" />
+            <Button layoutX="15.0" layoutY="115.0" mnemonicParsing="false" onAction="#invert" prefHeight="35.0" prefWidth="144.0" text="Invert" />
+            <Button layoutX="15.0" layoutY="165.0" mnemonicParsing="false" onAction="#erode" prefHeight="35.0" prefWidth="144.0" text="Erode" />
+            <Button layoutX="15.0" layoutY="215.0" mnemonicParsing="false" onAction="#dilate" prefHeight="35.0" prefWidth="144.0" text="Dilate" />
+            <Button layoutX="15.0" layoutY="265.0" mnemonicParsing="false" onAction="#outlines" prefHeight="35.0" prefWidth="144.0" text="Outlines" />
+            <Button layoutX="15.0" layoutY="315.0" mnemonicParsing="false" onAction="#all" prefHeight="35.0" prefWidth="144.0" text="All" />
+         </children></AnchorPane>
+    <AnchorPane fx:id="anchorPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <ImageView fx:id="imageView" fitHeight="370.0" fitWidth="376.0" layoutX="15.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true"></ImageView>
+         </children>
+    </AnchorPane>
+  </items>
+</SplitPane>
